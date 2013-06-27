@@ -18,7 +18,7 @@ update.df <- function(dataframe){
 
 do.model <- function(dataframe){
   dataframe$text <- iconv(dataframe$text, "", "latin1", sub="")
-  dataframe$text <- URLdecode(dataframe$text)
+  dataframe$text <- as.character(sapply(dataframe$text, URLdecode))
   dataframe$text.cleansed <- as.character(sapply(dataframe$text, function(x)clean.text(x)))
   dataframe$created_at2 <- as.Date(dataframe$created_at, "%a %b %d %H:%M:%S +0000 %Y")
   dataframe$is.rt <- grepl("^RT| RT @", dataframe$text)
