@@ -14,7 +14,8 @@ shinyUI(pageWithSidebar(
       label = "Select category label",
       choices = c("All", "News", "Junk"),
       selected = "All"),
-    checkboxInput("rt", "Show Retweets", FALSE)
+    checkboxInput("rt", "Show Retweets", FALSE),
+    actionButton("refresh", "Click to Refresh Data")
   ),
 
   
