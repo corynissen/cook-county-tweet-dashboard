@@ -1,6 +1,5 @@
 
 library(shiny)
-library(textcat)
 
 system("update.sh") # df is all the data
 load("data.Rdata")
