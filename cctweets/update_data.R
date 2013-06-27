@@ -1,5 +1,6 @@
 
 library(RMongo)
+library(lubridate)
 
 update.df <- function(dataframe){
   created_at2 <- gsub("\\+0000 ", "", dataframe$created_at)
@@ -11,7 +12,7 @@ update.df <- function(dataframe){
   return(new.df)
 }
 
-system("sh /src/mongo_tunnel.sh")
+system("sh /src/keys/mongo_tunnel.sh &")
 mongo <- mongoDbConnect("cctweets")
 username = "cctweets" 
 password = "cctweets" 
