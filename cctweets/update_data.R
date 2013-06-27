@@ -2,6 +2,7 @@
 library(RMongo)
 library(lubridate)
 library(textcat)
+library(stringr)
 load("c_model.Rdata")
 
 update.df <- function(dataframe){
