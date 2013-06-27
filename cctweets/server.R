@@ -4,12 +4,14 @@ library(shiny)
 # We tweak the "am" field to have nicer factor labels. Since this doesn't
 # rely on any user inputs we can do this once at startup and then use the
 # value throughout the lifetime of the application
-source("update_data.R") # df is all the data
+system("update.sh") # df is all the data
+load("data.Rdata")
 
 # Define server logic required to plot various variables against mpg
 shinyServer(function(input, output) {
 
   data <- reactive({
+    df$created_at2 <- as.Date(df$created_at, "%a %b %d %H:%M:%S +0000 %Y")
     df <- df[order(df$created_at2, decreasing=TRUE),]
     if(!input$rt){
       df <- subset(df, !is.rt)
