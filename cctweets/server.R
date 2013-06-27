@@ -7,10 +7,12 @@ load("data.Rdata")
 
 shinyServer(function(input, output) {
   
-  if(input$refresh > 0){
+  refresh <- reactive({
+    if(input$refresh > 0){
       source("update_data.R")
       load("data.Rdata")
     }
+  })
 
   data <- reactive({
     df$created_at3 <- gsub("\\+0000 ", "", df$created_at)
