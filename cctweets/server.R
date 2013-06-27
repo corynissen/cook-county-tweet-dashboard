@@ -14,9 +14,6 @@ shinyServer(function(input, output) {
         load("data.Rdata")
       })
     }
-    df$created_at3 <- gsub("\\+0000 ", "", df$created_at)
-    df$created_at3 <- parse_date_time(substring(df$created_at3, 5, nchar(df$created_at3)), "%b %d %H:%M:%S %Y")
-    df$epoch <- seconds(df$created_at3)
     df <- df[order(df$epoch, decreasing=TRUE),]
     if(!input$rt){
       df <- subset(df, !is.rt)
