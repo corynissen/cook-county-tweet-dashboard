@@ -6,10 +6,7 @@ library(stringr)
 load("c_model.Rdata")
 
 update.df <- function(dataframe){
-  created_at2 <- gsub("\\+0000 ", "", dataframe$created_at)
-  created_at2 <- parse_date_time(substring(created_at2, 5, nchar(created_at2)), "%b %d %H:%M:%S %Y")
-  epoch <- seconds(created_at2)
-  max.date <- max(epoch, na.rm=T) * 1000
+  max.date <- max(dataframe$epoch, na.rm=T) * 1000
   new.df <-  dbGetQuery(mongo, "tweets", query=paste0('{"jDate":{"$gt":{"$date":', max.date, '}}}'), 0, 1000000)  
   if(nrow(new.df) > 0){
     new.df <- do.model(new.df)
@@ -25,6 +22,9 @@ do.model <- function(dataframe){
   dataframe$text.cleansed <- as.character(sapply(dataframe$text, function(x)clean.text(x)))
   dataframe$created_at2 <- as.Date(dataframe$created_at, "%a %b %d %H:%M:%S +0000 %Y")
   dataframe$is.rt <- grepl("^RT| RT @", dataframe$text)
+  dataframe$created_at3 <- gsub("\\+0000 ", "", dataframe$created_at)
+  dataframe$created_at3 <- parse_date_time(substring(dataframe$created_at3, 5, nchar(dataframe$created_at3)), "%b %d %H:%M:%S %Y")
+  dataframe$epoch <- seconds(dataframe$created_at3)
   dataframe$category <- textcat(dataframe$text.cleansed, c.model)
   news.phrases <- c("Cook County News:", "via @crainschicago", "PRESS RELEASE:")
   dataframe$category[grepl(paste(news.phrases, collapse="|"), dataframe$text, ignore.case=TRUE)] <- "News"
