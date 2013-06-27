@@ -37,8 +37,7 @@ do.model <- function(dataframe){
 
 # must have ssh tunnel up and running
 mongo <- mongoDbConnect("cctweets")
-username = "cctweets" 
-password = "cctweets" 
+source("pw.R")
 authenticated <- dbAuthenticate(mongo, username, password)
 
 if(file.exists("data.Rdata")){
