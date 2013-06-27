@@ -17,14 +17,14 @@ update.df <- function(dataframe){
 }
 
 do.model <- function(dataframe){
-  dataframe$text2 <- iconv(dataframe$text, "UTF-8", "ASCII", sub="")
+  dataframe$text <- iconv(dataframe$text, "", "latin1", sub="")
   #dataframe$text.cleansed <- gsub("[^[:alnum:]///' ]", "", dataframe$text.cleansed)
   dataframe$text.cleansed <- as.character(sapply(dataframe$text, function(x)clean.text(x)))
   dataframe$created_at2 <- as.Date(dataframe$created_at, "%a %b %d %H:%M:%S +0000 %Y")
-  dataframe$is.rt <- grepl("^RT| RT @", dataframe$text2)
+  dataframe$is.rt <- grepl("^RT| RT @", dataframe$text)
   dataframe$category <- textcat(dataframe$text.cleansed, c.model)
   news.phrases <- c("Cook County News:", "via @crainschicago", "PRESS RELEASE:")
-  dataframe$category[grepl(paste(news.phrases, collapse="|"), dataframe$text2, ignore.case=TRUE)] <- "News"
+  dataframe$category[grepl(paste(news.phrases, collapse="|"), dataframe$text, ignore.case=TRUE)] <- "News"
   return(dataframe)
 }
 
