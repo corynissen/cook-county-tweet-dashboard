@@ -17,7 +17,8 @@ update.df <- function(dataframe){
 }
 
 do.model <- function(dataframe){
-  dataframe$text.cleansed <- as.character(sapply(dataframe$text, function(x)clean.text(x)))
+  dataframe$text.cleansed <- iconv(dataframe$text, "UTF-8", "ASCII", sub="")
+  dataframe$text.cleansed <- as.character(sapply(dataframe$text.cleansed, function(x)clean.text(x)))
   dataframe$created_at2 <- as.Date(dataframe$created_at, "%a %b %d %H:%M:%S +0000 %Y")
   dataframe$is.rt <- grepl("^RT| RT @", dataframe$text)
   dataframe$category <- textcat(dataframe$text.cleansed, c.model)
