@@ -1,7 +1,7 @@
 
 library(shiny)
 
-system("update.sh") # df is all the data
+system("/var/shiny-server/www/cctweets/update.sh") # df is all the data
 load("data.Rdata")
 
 shinyServer(function(input, output) {
