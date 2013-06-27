@@ -6,12 +6,13 @@ source("update_data.R")  # df is all the data
 load("data.Rdata")
 
 shinyServer(function(input, output) {
-
-  data <- reactive({
-    if(input$refresh > 0){
+  
+  if(input$refresh > 0){
       source("update_data.R")
       load("data.Rdata")
     }
+
+  data <- reactive({
     df$created_at3 <- gsub("\\+0000 ", "", df$created_at)
     df$created_at3 <- parse_date_time(substring(df$created_at3, 5, nchar(df$created_at3)), "%b %d %H:%M:%S %Y")
     df$epoch <- seconds(df$created_at3)
