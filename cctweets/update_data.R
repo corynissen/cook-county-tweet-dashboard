@@ -10,6 +10,10 @@ update.df <- function(dataframe){
   new.df <-  dbGetQuery(mongo, "tweets", query=paste0('{"jDate":{"$gt":{"$date":', max.date, '}}}'), 0, 1000000)  
   if(nrow(new.df) > 0){
     new.df <- do.model(new.df)
+    add_these_cols <- names(dataframe)[!names(dataframe) %in% names(new.df)]
+    for(col in add_these_cols){
+      new.df[,col] <- rep(NA, nrow(new.df))
+    }
     new.df <- as.data.frame(rbind(dataframe, new.df))
   }else{
     new.df <- dataframe
