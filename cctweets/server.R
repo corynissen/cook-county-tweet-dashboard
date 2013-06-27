@@ -12,6 +12,7 @@ shinyServer(function(input, output) {
 
   data <- reactive({
     df$created_at2 <- as.Date(df$created_at, "%a %b %d %H:%M:%S +0000 %Y")
+    df$is.rt <- grepl("^RT| RT @", df$text)
     df <- df[order(df$created_at2, decreasing=TRUE),]
     if(!input$rt){
       df <- subset(df, !is.rt)
