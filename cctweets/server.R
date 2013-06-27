@@ -2,7 +2,7 @@
 library(shiny)
 library(lubridate)
 
-#system("/var/shiny-server/www/cctweets/update.sh") # df is all the data
+source("update_data.R")  # df is all the data
 load("data.Rdata")
 
 shinyServer(function(input, output) {
