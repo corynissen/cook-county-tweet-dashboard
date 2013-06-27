@@ -26,6 +26,8 @@ if(file.exists("data.Rdata")){
   df <- dbGetQuery(mongo, "tweets", '{}', 0, 1000000)
 }
 
+system("killall ssh")
+
 save(list=c("df"), file="data.Rdata")
 
 # scp -i ~/cn/chicago/keys/rserver.pem ~/cn/chicago/keys/mongo_tunnel.sh ubuntu@54.227.2.128:/src/keys
