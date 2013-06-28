@@ -12,7 +12,7 @@ shinyUI(pageWithSidebar(
   sidebarPanel(
     selectInput(inputId = "category",
       label = "Select category label",
-      choices = c("All", "News", "Gov", "Jail", "Sports", "Weather", "Junk"),
+      choices = c("All", "Gov", "Foursquare", "Jail", "News", "Sports", "Weather", "Junk"),
       selected = "All"),
     checkboxInput("rt", "Show Retweets", FALSE),
     br(),
