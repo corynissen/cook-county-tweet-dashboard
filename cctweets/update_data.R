@@ -32,8 +32,10 @@ do.model <- function(dataframe){
   dataframe$category <- textcat(dataframe$text.cleansed, c.model)
   news.phrases <- c("Cook County News:", "via @crainschicago", "PRESS RELEASE:")
   weather.phrases <- c("Severe Thunderstorm", "Severe t-storm", "flash flood", "storm warning", "weather alert")
+  4sq.phrases <- c("I'm at")
   dataframe$category[grepl(paste(news.phrases, collapse="|"), dataframe$text, ignore.case=TRUE)] <- "News"
   dataframe$category[grepl(paste(weather.phrases, collapse="|"), dataframe$text, ignore.case=TRUE)] <- "Weather"
+  dataframe$category[grepl(paste(weather.phrases, collapse="|"), dataframe$text, ignore.case=TRUE)] <- "Foursquare"
   return(dataframe)
 }
 
