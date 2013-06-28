@@ -31,7 +31,9 @@ do.model <- function(dataframe){
   dataframe$epoch <- seconds(dataframe$created_at3)
   dataframe$category <- textcat(dataframe$text.cleansed, c.model)
   news.phrases <- c("Cook County News:", "via @crainschicago", "PRESS RELEASE:")
+  weather.phrases <- c("Severe Thunderstorm", "Severe t-storm", "flash flood", "storm warning", "weather alert")
   dataframe$category[grepl(paste(news.phrases, collapse="|"), dataframe$text, ignore.case=TRUE)] <- "News"
+  dataframe$category[grepl(paste(weather.phrases, collapse="|"), dataframe$text, ignore.case=TRUE)] <- "Weather"
   return(dataframe)
 }
 
