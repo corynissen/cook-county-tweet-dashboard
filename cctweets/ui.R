@@ -1,3 +1,4 @@
+
 library(shiny)
 library(ggplot2)
 
@@ -5,26 +6,26 @@ library(ggplot2)
 shinyUI(pageWithSidebar(
 
   # Application title
-  headerPanel("County Tweets"),
-
-  # Sidebar with controls to select the variable to plot against mpg
-  # and to specify whether outliers should be included
+  headerPanel("Cook County Tweets"),
+   
   sidebarPanel(
     selectInput(inputId = "category",
       label = "Select category label",
-      choices = c("All", "Gov", "Foursquare", "Jail", "News", "Sports", "Weather", "Junk"),
-      selected = "All"),
+      choices = c("All", "Gov", "Foursquare", "Jail", "News", "Sports",
+          "Weather", "Junk"),
+      selected = "All"),    
     checkboxInput("rt", "Show Retweets", FALSE),
     br(),
-    actionButton("refresh", "Click to Refresh Data")
+    uiOutput("day.slider"),
+    br(),
+    textInput("search.term", "Subset Data By Search Term", "")
+##    br(),
+##    actionButton("refresh", "Click to Update Data (takes about a minute)")
   ),
-
   
   mainPanel(
     h3(textOutput("caption")),
-    plotOutput("plot"),
-
-    
+    plotOutput("plot"),    
     tableOutput("tweet.table")
   )
 ))
