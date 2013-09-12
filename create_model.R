@@ -53,11 +53,12 @@ df$text.cleansed <- as.character(sapply(df$text, function(x)clean.text(x)))
 df$is.rt <- grepl("^RT| RT @", df$text)
 
 # split into cat and uncat data sets
-df.uncat <- subset(df, is.na(manual_class))
-df.cat <- subset(df, !is.na(manual_class) & text.cleansed != "")
+df.uncat <- subset(df, is.na(manual_class) | manual_class=="")
+df.cat <- subset(df, !is.na(manual_class) & manual_class!="" &
+                 text.cleansed != "")
 df.cat <- subset(df.cat, !duplicated(text.cleansed))
 
 # train the model using the textcat package
 c.model <- textcat_profile_db(df.cat$text.cleansed, df.cat$manual_class)
 # save model file to be used on server 
-save(list=c("cctweets/c.model", "clean.text"), file="c_model.Rdata")
+save(list=c("c.model", "clean.text"), file="cctweets/c_model.Rdata")
