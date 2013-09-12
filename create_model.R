@@ -45,12 +45,11 @@ clean.text <- function(text){
 }  
 
 # read the manually classified tweets
-df <- read.csv("county_tweets_062413.csv", stringsAsFactors=F)
+df <- read.csv("county_tweets.csv", stringsAsFactors=F)
 
 # do the preprocessing to the data. this needs to be done before any prediction
 # using the model that is created.
 df$text.cleansed <- as.character(sapply(df$text, function(x)clean.text(x)))
-df$created_at2 <- as.Date(df$created_at, "%a %b %d %H:%M:%S +0000 %Y")
 df$is.rt <- grepl("^RT| RT @", df$text)
 
 # split into cat and uncat data sets
@@ -62,22 +61,3 @@ df.cat <- subset(df.cat, !duplicated(text.cleansed))
 c.model <- textcat_profile_db(df.cat$text.cleansed, df.cat$manual_class)
 # save model file to be used on server 
 save(list=c("c.model", "clean.text"), file="c_model.Rdata")
-
-# test it out...
-# textcat("i have the food poisoning", fp.model)
-#test <- sapply(df2$text.cleansed[1:100], function(x)textcat(x, c.model))
-#paste0(as.character(test), " |||| ", df2$text[1:100])
-
-
-df.uncat$pred <- textcat(df.uncat$text.cleansed, c.model)
-
-df$category <- textcat(df$text.cleansed, c.model)
-df$category[!is.na(df$manual_class)] <- df$manual_class[!is.na(df$manual_class)]
-
-news.phrases <- c("Cook County News:", "via @crainschicago", "PRESS RELEASE:")
-df$category[grepl(paste(news.phrases, collapse="|"), df$text, ignore.case=TRUE)] <- "News"
-
-save(list=c("df.cat", "df.uncat", "df"), file="data.Rdata")
-
-
-             
