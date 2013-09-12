@@ -60,4 +60,4 @@ df.cat <- subset(df.cat, !duplicated(text.cleansed))
 # train the model using the textcat package
 c.model <- textcat_profile_db(df.cat$text.cleansed, df.cat$manual_class)
 # save model file to be used on server 
-save(list=c("c.model", "clean.text"), file="c_model.Rdata")
+save(list=c("cctweets/c.model", "clean.text"), file="c_model.Rdata")
