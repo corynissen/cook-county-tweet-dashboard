@@ -2,8 +2,9 @@
 library(shiny)
 library(lubridate)
 library(reshape2)
+source('df2html.R')
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
   #source("update_data.R")  # df is all the data
   load("cookcounty.Rdata")  
 
@@ -38,7 +39,40 @@ shinyServer(function(input, output) {
     df <- data()
     max.date <- max(df$created_at3)
     df <- subset(df, created_at3 >= max.date-days(input$day.slider.reactive))
+    #if(!is.null(input$links.table)){
+    #  if(input$links.table > 0){
+    #    selected.link <- get.selected.link()
+    #    if(selected.link != "NULL"){
+    #      df <- subset(df, embedded.url.long.hostname.short==selected.link)
+    #      input$links.table <- NULL
+    #    }
+    #  }
+    #}
     df
+  })
+
+  get.links.freq.table <- reactive({
+    df <- subset.data()
+    tab <- table(df$embedded.url.long.hostname.short)
+    links.df <- data.frame(hostname=names(tab), count=as.numeric(tab),
+                           stringsAsFactors=F)
+    links.df <- links.df[order(links.df$count, decreasing=T),]
+    links.df <- subset(links.df, hostname!="")
+    links.df
+  })
+
+  get.selected.link <- reactive({
+    if(!is.null(input$links.freq.table)){
+      if(input$links.freq.table > 0){
+        links.df <- get.links.freq.table()
+        ret <- links.df[input$links.freq.table,1]
+      }else{
+        ret <- "NULL"
+      }
+    }else{
+      ret <- "NULL"
+    }
+    ret
   })
 
   # create the slider here because I need input from the df dataframe
@@ -75,19 +109,39 @@ shinyServer(function(input, output) {
   })
 
   output$tweet.table <- renderTable({
-      df <- subset.data()
-      tab <- subset(df, select=c("text", "category", "created.at",
-                            "status.link"))
+    df <- subset.data()
+    tab <- subset(df, select=c("text", "category", "created.at",
+                          "status.link"))
       
   },include.rownames=FALSE, sanitize.text.function = function(x) x)
+ 
+  output$links.freq.table <- renderUI({
+    links.df <- get.links.freq.table()
+    HTML(df2html(links.df, class = "tbl selRow", id = "links.freq.table"))
+  })
 
   output$links.table <- renderTable({
-      df <- subset.data()
-      tab <- table(df$embedded.url.long.hostname.short)
-      links.df <- data.frame(hostname=names(tab), count=as.numeric(tab))
-      links.df <- links.df[order(links.df$count, decreasing=T),]
-      links.df <- subset(links.df, hostname!="")
-      links.df
+    df <- subset.data()
+    selected.link <- get.selected.link()
+    if(selected.link != "NULL"){
+      df.filtered <- subset(df, embedded.url.long.hostname.short==selected.link)
+    }else{
+      df.filtered <- df
+    }
+    df.filtered$embedded.link <- paste0('<a href="',
+                                      df.filtered$embedded.url.long,
+                                      '" target="_blank">Follow Link</a>')
+    tab <- subset(df.filtered, select=c("text", "created.at", "embedded.link"))  
   },include.rownames=FALSE, sanitize.text.function = function(x) x)
-      
+
+# debug stuff... remove eventually  
+observe({print(paste0("Table 2: ", ifelse(is.null(input$links.freq.table), "NULL", input$links.freq.table)))})
+observe({print(get.selected.link())})
+  
 })
+
+
+#output$testTbl2 <- renderUI({
+#    if (!is.null(testdf()))
+#        HTML(df2html(testdf(), class = "tbl selRow", id = "testTbl2"))
+#    })
