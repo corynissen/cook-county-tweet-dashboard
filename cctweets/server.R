@@ -80,5 +80,14 @@ shinyServer(function(input, output) {
                             "status.link"))
       
   },include.rownames=FALSE, sanitize.text.function = function(x) x)
+
+  output$links.table <- renderTable({
+      df <- subset.data()
+      tab <- table(df$embedded.url.long.hostname.short)
+      links.df <- data.frame(hostname=names(tab), count=as.numeric(tab))
+      links.df <- links.df[order(links.df$count, decreasing=T),]
+      links.df <- subset(links.df, hostname!="")
+      links.df
+  },include.rownames=FALSE, sanitize.text.function = function(x) x)
       
 })
