@@ -4,6 +4,8 @@ library(RJSONIO)
 library(RCurl)
 library(stringr)
 library(textcat)
+library(parallel)
+library(httr)
 load("c_model.Rdata")
 
 tablename <- "cory_tweets"
@@ -45,6 +47,19 @@ add.cols <- function(df){
   df$status.link <- paste0('<a href="https://twitter.com/', df$author,
                            '/status/', df$tweetid,
                            '" target="_blank">View on Twitter</a>')
+  df$embedded.url <- str_extract(df$text,
+                       "http://[A-Za-z0-9].[A-Za-z]{2,3}/[A-Za-z0-9]+")
+  df$embedded.url.long <- sapply(df$embedded.url,
+                             function(x)ifelse(is.na(x), NA, getLongURL.api(x)))
+  df$embedded.url.long.hostname <- sapply(df$embedded.url.long,
+                                          function(x)ifelse(!is.na(x) & x!="",
+                                            parse_url(x)$hostname, ""))
+  df$embedded.url.long.hostname <- gsub("www.", "",
+                                        df$embedded.url.long.hostname)
+  df$embedded.url.long.hostname.short <- substring(df$embedded.url.long.hostname,
+                                           regexpr("[a-zA-Z0-9]+.[a-zA-Z]+$",
+                                           df$embedded.url.long.hostname),
+                                           nchar(df$embedded.url.long.hostname))
   return(df)
 }
 
@@ -108,6 +123,42 @@ read.tweets <- function(tablename, searchterm, max.id){
                             tweetid=tweetid, created.at=timestamp_pretty),
                       stringsAsFactors=F)
   return(df)
+}
+
+getLongURL.curl <- function(shorturl){
+  # uses curl statement to get expanded url from t.co links (or any link)
+  # loop through until there's no location attribute... that's the long link.
+  newurl <- shorturl
+  url <- ""
+  while(url != newurl){
+    data <- system(paste0("curl -I --connect-timeout 5 ", newurl), intern=T)    
+    if(sum(grepl("^location: ", tolower(data))) == 0 |
+       sum(grepl("^http/1.1 302 moved temporarily", tolower(data)))>0){        
+      url <- newurl
+    }else{
+      data <- subset(data, tolower(substring(data, 1, 9)) %in% c("location:"))
+      stringurl <- substring(data[1], regexpr(":", data[1])+2, nchar(data[1])-1)
+      # sometimes the location data isn't a url.
+      if(substring(stringurl, 1, 4)=="http"){ 
+        newurl <- stringurl
+      }else{
+        url <- newurl
+      }
+    }
+  }
+  return(newurl)
+}
+getLongURL.api <- function(shorturl){
+  response <- getURL(paste0("http://api.longurl.org/v2/expand?url=", shorturl))
+  # parse out long url
+  if(grepl("<long-url", response)){
+    longurl <- substring(response,
+                         regexpr("<long-url><!\\[CDATA\\[", response)[1]+19,
+                         regexpr("\\]\\]><\\/long-url>", response)[1]-1)
+  }else{
+    longurl <- ""
+  }
+  return(longurl)
 }
 
   
