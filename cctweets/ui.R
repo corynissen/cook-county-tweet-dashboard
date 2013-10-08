@@ -24,8 +24,13 @@ shinyUI(pageWithSidebar(
   ),
   
   mainPanel(
-    h3(textOutput("caption")),
-    plotOutput("plot"),    
-    tableOutput("tweet.table")
+    tabsetPanel(
+      tabPanel("Tweets",
+        h3(textOutput("caption")),
+        plotOutput("plot"),    
+        tableOutput("tweet.table")),
+      tabPanel("Links",
+        tableOutput("links.table"))
+      )
   )
 ))
