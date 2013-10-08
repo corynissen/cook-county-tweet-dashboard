@@ -10,7 +10,7 @@ load("c_model.Rdata")
 
 tablename <- "cory_tweets"
 searchterm <- "cook_county"
-max.id <- "0"
+max.id <- "381284021797326848"  # start it in 9/2013 some time.
 
 update.df <- function(df, tablename, searchterm){
   max.id <- max(df$tweetid[df$search_term==searchterm])
@@ -167,7 +167,7 @@ if(file.exists("cookcounty.Rdata")){
   load("cookcounty.Rdata")
   df <- update.df(df, tablename, searchterm)
 }else{
-  df <- read.tweets(tablename, searchterm, "0")
+  df <- read.tweets(tablename, searchterm, max.id)
   df <- add.cols(df)
 
 }
