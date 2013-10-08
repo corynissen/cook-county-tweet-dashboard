@@ -9,6 +9,10 @@ shinyUI(pageWithSidebar(
   headerPanel("Cook County Tweets"),
    
   sidebarPanel(
+    tags$head(
+      tags$link(rel="stylesheet", type="text/css", href="css/styles.css"),
+      tags$script(type = 'text/javascript', src = 'js/responsiveTable.js')
+    ),
     selectInput(inputId = "category",
       label = "Select category label",
       choices = c("All", "Gov", "Foursquare", "Jail", "News", "Sports",
@@ -28,9 +32,12 @@ shinyUI(pageWithSidebar(
       tabPanel("Tweets",
         h3(textOutput("caption")),
         plotOutput("plot"),    
-        tableOutput("tweet.table")),
+        tableOutput("tweet.table")
+      ),
       tabPanel("Links",
-        tableOutput("links.table"))
-      )
+        uiOutput(outputId = "links.freq.table"),
+        tableOutput("links.table")
+      )        
+    )
   )
 ))
