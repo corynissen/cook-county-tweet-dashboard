@@ -7,6 +7,7 @@ library(textcat)
 library(parallel)
 library(httr)
 load("c_model.Rdata")
+source("findNames.R")
 
 tablename <- "cory_tweets"
 searchterm <- "cook_county"
@@ -60,6 +61,8 @@ add.cols <- function(df){
                                            regexpr("[a-zA-Z0-9]+.[a-zA-Z]+$",
                                            df$embedded.url.long.hostname),
                                            nchar(df$embedded.url.long.hostname))
+  df$people.names <- sapply(mclapply(df$text, get.people.names, mc.cores=3),
+                            function(x)paste(x, collapse=", "))
   return(df)
 }
 
