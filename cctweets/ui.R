@@ -37,7 +37,11 @@ shinyUI(pageWithSidebar(
       tabPanel("Links",
         uiOutput(outputId = "links.freq.table"),
         tableOutput("links.table")
-      )        
+      ),
+      tabPanel("Names",
+        uiOutput(outputId = "names.freq.table"),
+        tableOutput("names.table")
+      )
     )
   )
 ))
