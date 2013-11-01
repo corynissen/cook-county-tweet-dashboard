@@ -52,7 +52,7 @@ shinyServer(function(input, output, session) {
     max.value <- ceiling(as.numeric((max.date - min.date)))
     return(sliderInput("day.slider.reactive", "Date range (back from present)",
                        min=1, max=max(c(2, max.value)), value=max(c(1,
-                                                 min(c(3, max.value))))))
+                                                 min(c(7, max.value))))))
   })
 
    ##########################################################################
