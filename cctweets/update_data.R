@@ -34,17 +34,7 @@ add.cols <- function(df){
   df$created_at3 <- parse_date_time(substring(df$created_at3, 5,
                       nchar(df$created_at3)), "%b %d %H:%M:%S %Y")
   df$epoch <- seconds(df$created_at3)
-  df$category <- textcat(df$text.cleansed, c.model)
-  news.phrases <- c("Cook County News:", "via @crainschicago", "PRESS RELEASE:")
-  weather.phrases <- c("Severe Thunderstorm", "Severe t-storm", "flash flood",
-                       "storm warning", "weather alert")
-  foursq.phrases <- c("I'm at")
-  df$category[grepl(paste(news.phrases, collapse="|"), df$text,
-                    ignore.case=TRUE)] <- "News"
-  df$category[grepl(paste(weather.phrases, collapse="|"), df$text,
-                    ignore.case=TRUE)] <- "Weather"
-  df$category[grepl(paste(foursq.phrases, collapse="|"), df$text,
-                    ignore.case=TRUE)] <- "Foursquare"
+
   df$status.link <- paste0('<a href="https://twitter.com/', df$author,
                            '/status/', df$tweetid,
                            '" target="_blank">View on Twitter</a>')
@@ -63,6 +53,33 @@ add.cols <- function(df){
                                            nchar(df$embedded.url.long.hostname))
   df$people.names <- sapply(mclapply(df$text, get.people.names, mc.cores=3),
                             function(x)paste(x, collapse=", "))
+  
+  df$category <- textcat(df$text.cleansed, c.model)
+  # do some overrides...
+  news.phrases <- c("Cook County News:", "via @crainschicago", "PRESS RELEASE:")
+  weather.phrases <- c("Severe Thunderstorm", "Severe t-storm", "flash flood",
+                       "storm warning", "weather alert")
+  foursq.phrases <- c("I'm at")
+  jail.phrases <- c("jail", "detention center", "inmate")
+  sports.phrases <- c("Bulls", "Cubs", "Bears", "Blackhawks", "White Sox")
+  gov.phrases <- c("assessor", "commissioner", "mayor", "Rahm", "farm bureau",
+                   "county rep", "county board", "forest preserve",
+                   "county sheriff")
+  df$category[grepl(paste(news.phrases, collapse="|"), df$text,
+                    ignore.case=TRUE)] <- "News"
+  df$category[grepl(paste(weather.phrases, collapse="|"), df$text,
+                    ignore.case=TRUE)] <- "Weather"
+  df$category[grepl(paste(foursq.phrases, collapse="|"), df$text,
+                    ignore.case=TRUE)] <- "Foursquare"
+  df$category[grepl(paste(jail.phrases, collapse="|"), df$text,
+                    ignore.case=TRUE)] <- "Jail"
+  df$category[grepl(paste(sports.phrases, collapse="|"), df$text,
+                    ignore.case=TRUE)] <- "Sports"
+  df$category[grepl(paste(gov.phrases, collapse="|"), df$text,
+                    ignore.case=TRUE)] <- "Gov"
+  df$category[df$embedded.url.long.hostname.short ==
+              "foursquare.com"] <- "Foursquare"
+  
   return(df)
 }
 
