@@ -40,6 +40,10 @@ add.cols <- function(df){
                            '" target="_blank">View on Twitter</a>')
   df$embedded.url <- str_extract(df$text,
                        "http://[A-Za-z0-9].[A-Za-z]{2,3}/[A-Za-z0-9]+")
+  df$text.with.links <- ifelse(is.na(df$embedded.url), df$text,
+                          str_replace(df$text, df$embedded.url,
+                            paste0('<a href="', df$embedded.url,
+                              '" target="_blank">', df$embedded.url, '</a>')))
   df$embedded.url.long <- sapply(df$embedded.url,
                              function(x)ifelse(is.na(x), NA, getLongURL.api(x)))
   df$embedded.url.long.hostname <- sapply(df$embedded.url.long,
