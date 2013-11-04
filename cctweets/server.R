@@ -80,13 +80,13 @@ shinyServer(function(input, output, session) {
     print(p)
   })
 
-  output$tweet.table <- renderTable({
+  output$tweet.table <- renderUI({
     df <- subset.data()
     print(paste("first page tweet table length: ", nrow(df)))
-    tab <- subset(df, select=c("text", "category", "created.at",
+    tab <- subset(df, select=c("text.with.links", "category", "created.at",
                           "status.link"))
-      
-  },include.rownames=FALSE, sanitize.text.function = function(x) x)
+    HTML(df2html(tab, class = "tbl", id = "tweet.table"))
+  })
   
   ##########################################################################
   # Links tab stuff
@@ -117,10 +117,11 @@ shinyServer(function(input, output, session) {
 
   output$links.freq.table <- renderUI({
     links.df <- get.links.freq.table()
-    HTML(df2html(links.df, class = "tbl selRow", id = "links.freq.table"))
+    HTML(df2html(links.df, class = "tbl selRow links_freq_table",
+                 id = "links.freq.table"))
   })
 
-  output$links.table <- renderTable({
+  output$links.table <- renderUI({
     df <- subset.data()
     selected.link <- get.selected.link()
     if(selected.link != "NULL"){
@@ -131,8 +132,9 @@ shinyServer(function(input, output, session) {
     df.filtered$embedded.link <- paste0('<a href="',
                                       df.filtered$embedded.url.long,
                                       '" target="_blank">Follow Link</a>')
-    tab <- subset(df.filtered, select=c("text", "created.at", "embedded.link"))  
-  },include.rownames=FALSE, sanitize.text.function = function(x) x)
+    tab <- subset(df.filtered, select=c("text", "created.at", "embedded.link"))
+    HTML(df2html(tab, class = "tbl links_table", id = "links.table"))
+  })
 
   ##########################################################################
   # Names tab stuff
@@ -170,7 +172,7 @@ shinyServer(function(input, output, session) {
     HTML(df2html(names.df, class = "tbl selRow", id = "names.freq.table"))
   })
 
-  output$names.table <- renderTable({
+  output$names.table <- renderUI({
     df <- subset.data()
     print(paste("tweet table length: ", length(df$people.names)))
     selected.name <- get.selected.name()
@@ -180,8 +182,8 @@ shinyServer(function(input, output, session) {
       df.filtered <- df
     }    
     tab <- subset(df.filtered, select=c("text", "created.at"))
-    tab
-  },include.rownames=FALSE, sanitize.text.function = function(x) x)
+    HTML(df2html(tab, class = "tbl names_table", id = "names.table"))
+  })
 
 # debug stuff... remove eventually  
 observe({print(paste0("Table 2: ", ifelse(is.null(input$links.freq.table), "NULL", input$links.freq.table)))})
