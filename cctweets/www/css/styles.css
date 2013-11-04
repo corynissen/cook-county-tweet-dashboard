@@ -32,14 +32,14 @@
 }
 
 .tbl tr:nth-child(2n+3) {
-	background-color: #fafafa;
+	background-color: #f2f2f2;
 }
 
 .selCell td:hover {
-	background-color: #f0f0f0;
-}
+	background-color: #d4d4d4;
+	}
 .selRow tr:hover {
-	background-color: #f0f0f0;
+	background-color: #d4d4d4;
 }
 .selCell,.selRow td {
 	cursor: hand; 
@@ -67,3 +67,20 @@ td.cellGreen{
 td.cellRed{
 	background-color: rgba(255,0,0,0.05);
 }
+
+.links_freq_table {
+    position:relative;
+    float:left;
+   }
+
+.links_table {
+    position:relative;
+    float:right;
+    width: 65%;
+   }
+
+.names_table {
+    position:relative;
+    float:right;
+    width: 75%;
+   }
