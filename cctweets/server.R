@@ -132,7 +132,8 @@ shinyServer(function(input, output, session) {
     df.filtered$embedded.link <- paste0('<a href="',
                                       df.filtered$embedded.url.long,
                                       '" target="_blank">Follow Link</a>')
-    tab <- subset(df.filtered, select=c("text", "created.at", "embedded.link"))
+    tab <- subset(df.filtered, select=c("text.with.links", "created.at",
+                                   "embedded.link"))
     HTML(df2html(tab, class = "tbl links_table", id = "links.table"))
   })
 
@@ -181,7 +182,7 @@ shinyServer(function(input, output, session) {
     }else{
       df.filtered <- df
     }    
-    tab <- subset(df.filtered, select=c("text", "created.at"))
+    tab <- subset(df.filtered, select=c("text.with.links", "created.at"))
     HTML(df2html(tab, class = "tbl names_table", id = "names.table"))
   })
 
