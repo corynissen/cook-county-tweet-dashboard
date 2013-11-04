@@ -32,15 +32,16 @@ shinyUI(pageWithSidebar(
       tabPanel("Tweets",
         h3(textOutput("caption")),
         plotOutput("plot"),    
-        tableOutput("tweet.table")
+        uiOutput("tweet.table")
       ),
       tabPanel("Links",
         uiOutput(outputId = "links.freq.table"),
-        tableOutput("links.table")
+        uiOutput(outputId = "links.table")
+        #tableOutput("links.table")
       ),
       tabPanel("Names",
         uiOutput(outputId = "names.freq.table"),
-        tableOutput("names.table")
+        uiOutput("names.table")
       )
     )
   )
