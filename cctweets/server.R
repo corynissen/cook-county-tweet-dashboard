@@ -11,16 +11,6 @@ shinyServer(function(input, output, session) {
   # Left panel stuff
   ##########################################################################
   data <- reactive({    
-    ## if(input$refresh > 0){
-    ##   isolate({
-    ##     source("update_data.R")
-    ##     load("all_fp.Rdata")
-    ##     df$is.rt <- as.logical(df$is.rt)
-    ##     df$epoch <- as.numeric(df$epoch)
-    ##     df$created.at3 <- as.Date(df$created.at2)
-    ##     df$city <- city.key[match(df$search_term, city.key[,2]),1]
-    ##   })
-    ## }
     df <- df[order(df$epoch, decreasing=TRUE),]
     if(!input$rt){
       df <- subset(df, !is.rt)
@@ -55,7 +45,7 @@ shinyServer(function(input, output, session) {
                                                  min(c(7, max.value))))))
   })
 
-   ##########################################################################
+  ##########################################################################
   # Tweets tab stuff
   ##########################################################################
   output$caption <- renderText({
@@ -133,7 +123,7 @@ shinyServer(function(input, output, session) {
                                       df.filtered$embedded.url.long,
                                       '" target="_blank">Follow Link</a>')
     tab <- subset(df.filtered, select=c("text.with.links", "created.at",
-                                   "embedded.link"))
+                                   "status.link"))
     HTML(df2html(tab, class = "tbl links_table", id = "links.table"))
   })
 
@@ -182,12 +172,12 @@ shinyServer(function(input, output, session) {
     }else{
       df.filtered <- df
     }    
-    tab <- subset(df.filtered, select=c("text.with.links", "created.at"))
+    tab <- subset(df.filtered, select=c("text.with.links", "created.at", 
+                                        "status.link"))
     HTML(df2html(tab, class = "tbl names_table", id = "names.table"))
   })
 
 # debug stuff... remove eventually  
-observe({print(paste0("Table 2: ", ifelse(is.null(input$links.freq.table), "NULL", input$links.freq.table)))})
-observe({print(get.selected.link())})
-  
+#observe({print(paste0("Table 2: ", ifelse(is.null(input$links.freq.table), "NULL", input$links.freq.table)))})
+#observe({print(get.selected.link())})  
 })
