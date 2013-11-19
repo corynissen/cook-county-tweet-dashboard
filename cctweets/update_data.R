@@ -34,7 +34,7 @@ add.cols <- function(df){
   df$created_at3 <- parse_date_time(substring(df$created_at3, 5,
                       nchar(df$created_at3)), "%b %d %H:%M:%S %Y")
   # add six hours to get CST and format for display
-  df$created.at4 <- format(df$created_at3 - (3600*6), "%a %b %d %I:%M%p")
+  df$created.at4 <- format(df$created_at3 - (3600*5), "%a %b %d %I:%M%p")
   df$epoch <- seconds(df$created_at3)
 
   df$status.link <- paste0('<a href="https://twitter.com/', df$author,
