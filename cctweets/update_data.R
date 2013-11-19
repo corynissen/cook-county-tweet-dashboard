@@ -33,6 +33,8 @@ add.cols <- function(df){
   df$created_at3 <- gsub("\\+0000 ", "", df$created.at)
   df$created_at3 <- parse_date_time(substring(df$created_at3, 5,
                       nchar(df$created_at3)), "%b %d %H:%M:%S %Y")
+  # add six hours to get CST and format for display
+  df$created.at4 <- format(df$created_at3 + (3600*6), "%a %b %d %I:%M%p")
   df$epoch <- seconds(df$created_at3)
 
   df$status.link <- paste0('<a href="https://twitter.com/', df$author,
@@ -62,7 +64,8 @@ add.cols <- function(df){
   # do some overrides...
   news.phrases <- c("Cook County News:", "via @crainschicago", "PRESS RELEASE:")
   weather.phrases <- c("Severe Thunderstorm", "Severe t-storm", "flash flood",
-                       "storm warning", "weather alert")
+                       "storm warning", "weather alert", "tornado warning", 
+                       "tornado watch", "storm warning", "storm watch")
   foursq.phrases <- c("I'm at")
   jail.phrases <- c("jail", "detention center", "inmate")
   sports.phrases <- c("Bulls", "Cubs", "Bears", "Blackhawks", "White Sox")
