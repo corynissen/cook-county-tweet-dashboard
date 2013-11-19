@@ -72,8 +72,7 @@ shinyServer(function(input, output, session) {
 
   output$tweet.table <- renderUI({
     df <- subset.data()
-    print(paste("first page tweet table length: ", nrow(df)))
-    tab <- subset(df, select=c("text.with.links", "category", "created.at",
+    tab <- subset(df, select=c("text.with.links", "category", "created.at4",
                           "status.link"))
     HTML(df2html(tab, class = "tbl", id = "tweet.table"))
   })
@@ -122,7 +121,7 @@ shinyServer(function(input, output, session) {
     df.filtered$embedded.link <- paste0('<a href="',
                                       df.filtered$embedded.url.long,
                                       '" target="_blank">Follow Link</a>')
-    tab <- subset(df.filtered, select=c("text.with.links", "created.at",
+    tab <- subset(df.filtered, select=c("text.with.links", "created.at4",
                                    "status.link"))
     HTML(df2html(tab, class = "tbl links_table", id = "links.table"))
   })
@@ -133,14 +132,9 @@ shinyServer(function(input, output, session) {
   get.names.freq.table <- reactive({
     df <- subset.data()
     tab <- table(unlist(strsplit(df$people.names, " \\| ")))
-    print(paste("freq table length: ", length(df$people.names)))
-    print(df$text[grepl("Anita Alvarez", df$text)])
-    print(df$text[grepl("Anita Alvarez", df$people.names)])
-    print(df$people.names[grepl("Anita Alvarez", df$text)])
     names.df <- data.frame(name=names(tab), count=as.numeric(tab),
                            stringsAsFactors=F)
     names.df <- names.df[order(names.df$count, decreasing=T),]
-    print(names.df)
     names.df
   })
 
@@ -165,14 +159,13 @@ shinyServer(function(input, output, session) {
 
   output$names.table <- renderUI({
     df <- subset.data()
-    print(paste("tweet table length: ", length(df$people.names)))
     selected.name <- get.selected.name()
     if(selected.name != "NULL"){
       df.filtered <- subset(df, grepl(selected.name, df$text))
     }else{
       df.filtered <- df
     }    
-    tab <- subset(df.filtered, select=c("text.with.links", "created.at", 
+    tab <- subset(df.filtered, select=c("text.with.links", "created.at4", 
                                         "status.link"))
     HTML(df2html(tab, class = "tbl names_table", id = "names.table"))
   })
