@@ -1,1 +1,1 @@
-cp -a cctweets /var/shiny-server/www
+cp -a cctweets /srv/shiny-server
