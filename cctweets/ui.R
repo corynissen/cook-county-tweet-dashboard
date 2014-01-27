@@ -32,7 +32,17 @@ shinyUI(pageWithSidebar(
     textInput("search.term", "Subset Data By Search Term", ""),
     br(),
     br(),
-    tags$img(src="SMRTCHIC.png", width=250)
+    tags$img(src="SMRTCHIC.png", width=250),
+    br(),
+    br(),
+    HTML('We mine <a href="https://twitter.com/">Twitter</a> for mentions of 
+         "Cook County". This dashboard represents what we have found. For more 
+          information about this project, see our <a href = 
+         "http://www.smartchicagocollaborative.org/">information page</a>.'),
+    br(),
+    br(),
+    HTML('The code for this dashboard is located on <a href="https://github.com/corynissen/cook-county-tweet-dashboard">Github</a>'),
+    tags$p("Verson 0.1")
   ),
   
   mainPanel(
