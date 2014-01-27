@@ -2,7 +2,6 @@
 library(shiny)
 library(ggplot2)
 
-# Define UI for miles per gallon application
 shinyUI(pageWithSidebar(
 
   # Application title
@@ -20,7 +19,9 @@ shinyUI(pageWithSidebar(
       selected = "All"),    
     checkboxInput("rt", "Show Retweets", FALSE),
     br(),
-    uiOutput("day.slider"),
+    dateRangeInput("daterange", "Date range:",
+                   start = Sys.Date()-7,
+                   end = Sys.Date()),
     br(),
     textInput("search.term", "Subset Data By Search Term", "")
 ##    br(),

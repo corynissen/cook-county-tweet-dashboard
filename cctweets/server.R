@@ -23,28 +23,20 @@ shinyServer(function(input, output, session) {
       df <- subset(df, grepl(tolower(input$search.term), tolower(df$text)))
     }
     
+    daterange <- input$daterange
+    start.date <- daterange[1]
+    end.date <- daterange[2]
+    start.date <- ifelse(start.date < min(df$created_at2), 
+                         min(df$created_at2), start.date)
+    start.date <- ifelse(start.date > max(df$created_at2), 
+                         max(df$created_at2) - 7, start.date)
+    end.date <- ifelse(end.date > max(df$created_at2), 
+                         max(df$created_at2), end.date)
+    df <- subset(df, created_at2 >= start.date &
+                     created_at2 <= end.date)    
     df
   })
-
-  # had to subset the data after the slider was created
-  subset.data <- reactive({
-    df <- data()
-    max.date <- max(df$created_at3)
-    df <- subset(df, created_at3 >= max.date-days(input$day.slider.reactive))
-    df
-  })
-
-  # create the slider here because I need input from the df dataframe
-  output$day.slider <- renderUI({
-    df <- data()
-    min.date <- min(df$created_at3)
-    max.date <- max(df$created_at3)
-    max.value <- ceiling(as.numeric((max.date - min.date)))
-    return(sliderInput("day.slider.reactive", "Date range (back from present)",
-                       min=1, max=max(c(2, max.value)), value=max(c(1,
-                                                 min(c(7, max.value))))))
-  })
-
+ 
   ##########################################################################
   # Tweets tab stuff
   ##########################################################################
@@ -53,7 +45,7 @@ shinyServer(function(input, output, session) {
   })
 
   output$plot <- renderPlot({
-    df <- subset.data()
+    df <- data()
     #df$created.at3 <- substring(df$created.at2, 1,
     #                            regexpr(" ", df$created.at2)-1)
     tmp <- as.data.frame(table(df$created_at2, df$category))
@@ -71,7 +63,7 @@ shinyServer(function(input, output, session) {
   })
 
   output$tweet.table <- renderUI({
-    df <- subset.data()
+    df <- data()
     tab <- subset(df, select=c("text.with.links", "category", "created.at4",
                           "status.link"))
     HTML(df2html(tab, class = "tbl", id = "tweet.table"))
@@ -81,7 +73,7 @@ shinyServer(function(input, output, session) {
   # Links tab stuff
   ##########################################################################
   get.links.freq.table <- reactive({
-    df <- subset.data()
+    df <- data()
     tab <- table(df$embedded.url.long.hostname.short)
     links.df <- data.frame(hostname=names(tab), count=as.numeric(tab),
                            stringsAsFactors=F)
@@ -111,7 +103,7 @@ shinyServer(function(input, output, session) {
   })
 
   output$links.table <- renderUI({
-    df <- subset.data()
+    df <- data()
     selected.link <- get.selected.link()
     if(selected.link != "NULL"){
       df.filtered <- subset(df, embedded.url.long.hostname.short==selected.link)
@@ -130,7 +122,7 @@ shinyServer(function(input, output, session) {
   # Names tab stuff
   ##########################################################################
   get.names.freq.table <- reactive({
-    df <- subset.data()
+    df <- data()
     tab <- table(unlist(strsplit(df$people.names, " \\| ")))
     names.df <- data.frame(name=names(tab), count=as.numeric(tab),
                            stringsAsFactors=F)
@@ -158,7 +150,7 @@ shinyServer(function(input, output, session) {
   })
 
   output$names.table <- renderUI({
-    df <- subset.data()
+    df <- data()
     selected.name <- get.selected.name()
     if(selected.name != "NULL"){
       df.filtered <- subset(df, grepl(selected.name, df$text))
@@ -172,5 +164,7 @@ shinyServer(function(input, output, session) {
 
 # debug stuff... remove eventually  
 #observe({print(paste0("Table 2: ", ifelse(is.null(input$links.freq.table), "NULL", input$links.freq.table)))})
-#observe({print(get.selected.link())})  
+observe({print(input$daterange)})  
+observe({print(str(input$daterange))})  
+  
 })
