@@ -164,7 +164,7 @@ shinyServer(function(input, output, session) {
 
 # debug stuff... remove eventually  
 #observe({print(paste0("Table 2: ", ifelse(is.null(input$links.freq.table), "NULL", input$links.freq.table)))})
-observe({print(input$daterange)})  
-observe({print(str(input$daterange))})  
+#observe({print(input$daterange)})  
+#observe({print(str(input$daterange))})  
   
 })
