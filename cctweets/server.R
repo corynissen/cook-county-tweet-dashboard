@@ -66,6 +66,7 @@ shinyServer(function(input, output, session) {
     df <- data()
     tab <- subset(df, select=c("text.with.links", "category", "created.at4",
                           "status.link"))
+    names(tab) <- c("Tweet Text", "Category", "Created At", "Link")
     HTML(df2html(tab, class = "tbl", id = "tweet.table"))
   })
   
@@ -98,6 +99,7 @@ shinyServer(function(input, output, session) {
 
   output$links.freq.table <- renderUI({
     links.df <- get.links.freq.table()
+    names(links.df) <- c("Hostname", "Count")
     HTML(df2html(links.df, class = "tbl selRow links_freq_table",
                  id = "links.freq.table"))
   })
@@ -115,6 +117,7 @@ shinyServer(function(input, output, session) {
                                       '" target="_blank">Follow Link</a>')
     tab <- subset(df.filtered, select=c("text.with.links", "created.at4",
                                    "status.link"))
+    names(tab) <- c("Tweet Text", "Created At", "Link")
     HTML(df2html(tab, class = "tbl links_table", id = "links.table"))
   })
 
@@ -146,6 +149,7 @@ shinyServer(function(input, output, session) {
 
   output$names.freq.table <- renderUI({
     names.df <- get.names.freq.table()
+    names(names.df) <- c("Name", "Count")
     HTML(df2html(names.df, class = "tbl selRow", id = "names.freq.table"))
   })
 
@@ -159,6 +163,7 @@ shinyServer(function(input, output, session) {
     }    
     tab <- subset(df.filtered, select=c("text.with.links", "created.at4", 
                                         "status.link"))
+    names(tab) <- c("Tweet Text", "Created At", "Link")
     HTML(df2html(tab, class = "tbl names_table", id = "names.table"))
   })
 
