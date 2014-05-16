@@ -16,7 +16,7 @@ searchterm <- "cook_county"
 max.id <- "381284021797326848"  # start it in 9/2013 some time.
 
 update.df <- function(df, tablename, searchterm){
-  max.id <- max(df$tweetid[df$search_term==searchterm])
+  max.id <- max(as.numeric(df$tweetid)[df$search_term==searchterm])
   new.df <- read.tweets(tablename, searchterm, max.id)
   if(nrow(new.df) > 0){
     new.df <- add.cols(new.df)
