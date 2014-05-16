@@ -9,6 +9,8 @@ library(httr)
 load("c_model.Rdata")
 source("findNames.R")
 
+options(scipen="99999999")
+
 tablename <- "cory_tweets"
 searchterm <- "cook_county"
 max.id <- "381284021797326848"  # start it in 9/2013 some time.
